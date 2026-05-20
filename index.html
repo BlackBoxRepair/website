@@ -175,7 +175,7 @@
             gap: 54px;
             will-change: transform;
             transform: translate3d(0, 0, 0);
-            transition: transform 0.72s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.68s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .price-viewport.dragging .price-track {
@@ -491,6 +491,24 @@
             return Math.abs(priceButtons[1].offsetLeft - priceButtons[0].offsetLeft) || 104;
         }
 
+        function getNearestPriceIndexByTranslate(translateX) {
+            const viewportCenter = priceViewport.clientWidth / 2;
+            let nearestIndex = currentPriceIndex;
+            let nearestDistance = Infinity;
+
+            priceButtons.forEach((button, index) => {
+                const buttonCenter = button.offsetLeft + (button.offsetWidth / 2) + translateX;
+                const distance = Math.abs(buttonCenter - viewportCenter);
+
+                if (distance < nearestDistance) {
+                    nearestDistance = distance;
+                    nearestIndex = index;
+                }
+            });
+
+            return nearestIndex;
+        }
+
         function updatePriceSlider(index) {
             if (!priceTrack || !priceViewport || priceButtons.length === 0) return;
 
@@ -515,7 +533,7 @@
             } else {
                 pricePlaceholder.classList.add('active');
                 pricePlaceholder.textContent = type === 'start'
-                    ? '請左右滑動，將設備圖示移動到中間圓框內查看報價。'
+                    ? '請選擇想查詢的服務項目。'
                     : '此項目的報價圖片準備中。';
             }
         }
@@ -556,20 +574,31 @@
                 isDraggingPrice = false;
                 priceViewport.classList.remove('dragging');
 
-                const step = getPriceButtonStep();
-                let targetIndex = currentPriceIndex - Math.round(dragDeltaX / step);
-
-                if (Math.abs(dragDeltaX) > 28 && targetIndex === currentPriceIndex) {
-                    targetIndex += dragDeltaX < 0 ? 1 : -1;
+                if (priceMoveFrame) {
+                    cancelAnimationFrame(priceMoveFrame);
+                    priceMoveFrame = null;
                 }
 
+                const releaseTranslate = getCenteredTranslate(currentPriceIndex) + dragDeltaX;
+                setPriceTrackPosition(releaseTranslate);
+
+                const targetIndex = getNearestPriceIndexByTranslate(releaseTranslate);
                 updatePriceSlider(targetIndex);
             });
 
             priceViewport.addEventListener('pointercancel', () => {
+                if (!isDraggingPrice) return;
                 isDraggingPrice = false;
                 priceViewport.classList.remove('dragging');
-                updatePriceSlider(currentPriceIndex);
+
+                if (priceMoveFrame) {
+                    cancelAnimationFrame(priceMoveFrame);
+                    priceMoveFrame = null;
+                }
+
+                const cancelTranslate = getCenteredTranslate(currentPriceIndex) + dragDeltaX;
+                const targetIndex = getNearestPriceIndexByTranslate(cancelTranslate);
+                updatePriceSlider(targetIndex);
             });
 
             window.addEventListener('resize', () => updatePriceSlider(currentPriceIndex));
