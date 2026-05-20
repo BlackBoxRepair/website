@@ -6,6 +6,7 @@
     <title>黑盒子維修中心 - 官方網站</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
     
     <style>
         :root {
@@ -133,82 +134,158 @@
         .display-img { width: 100%; height: auto; display: none; }
         .display-img.active { display: block; animation: fadeIn 0.4s; }
 
-        /* --- 💎 價格查詢 菱形按鈕排版區 --- */
-        .diamond-tabs-wrapper {
+        /* --- 價格查詢：滑動式設備選擇器 --- */
+        .price-slider-area {
+            position: relative;
+            width: 100%;
+            max-width: 980px;
+            margin: 22px auto 22px auto;
+            padding: 18px 0 10px 0;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .price-viewport {
+            width: 100%;
+            overflow: hidden;
+            padding: 18px 0 24px 0;
+            cursor: grab;
+            touch-action: pan-y;
+        }
+
+        .price-viewport.dragging { cursor: grabbing; }
+
+        .price-track {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            margin-bottom: 50px;
-            margin-top: 30px;
+            gap: 54px;
+            will-change: transform;
+            transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        .diamond-row {
-            display: flex;
-            justify-content: center;
-            gap: 32px; 
-        }
+        .price-viewport.dragging .price-track { transition: none; }
 
-        .diamond-row.bottom {
-            margin-top: -12px; 
-        }
-
-        .diamond-btn {
-            width: 50px;  
-            height: 50px; 
-            background-color: var(--primary-black);
-            transform: rotate(45deg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: var(--transition);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .diamond-btn .btn-content {
-            transform: rotate(-45deg); 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 24px;
-            height: 24px;
-        }
-
-        .diamond-btn i {
+        .price-device-btn {
+            flex: 0 0 104px;
+            width: 104px;
+            height: 104px;
+            border-radius: 50%;
+            border: 6px solid transparent;
+            background: rgba(212, 175, 55, 0.24);
             color: #ffffff;
-            font-size: 24px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0.48;
+            transition: var(--transition);
+            box-shadow: none;
+            position: relative;
         }
 
-        .diamond-btn svg {
-            width: 24px;
-            height: 24px;
-            fill: #ffffff;
+        .price-device-btn iconify-icon {
+            font-size: 48px;
+            line-height: 1;
+            color: currentColor;
+        }
+
+        .price-device-btn:hover {
+            opacity: 0.78;
+            transform: translateY(-2px);
+        }
+
+        .price-device-btn.active {
+            background: #aaaaaa;
+            border-color: #f2b600;
+            opacity: 1;
+            transform: scale(1.08);
+            box-shadow: inset 0 0 0 4px #ffffff, 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .price-device-btn.active iconify-icon { font-size: 52px; }
+
+        .price-device-btn::after {
+            content: attr(data-label);
+            position: absolute;
+            left: 50%;
+            bottom: -34px;
+            transform: translateX(-50%);
+            font-size: 13px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            opacity: 0;
             transition: var(--transition);
         }
 
-        .diamond-btn:hover {
-            transform: rotate(45deg) scale(1.05);
-            background-color: var(--secondary-black);
+        .price-device-btn.active::after {
+            opacity: 1;
+            color: var(--primary-black);
+            font-weight: 500;
         }
 
-        .diamond-btn.active {
-            border-color: var(--gold-accent);
-            background-color: var(--primary-black);
+        .swipe-hint {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin: 8px auto 4px auto;
+            color: var(--primary-black);
+            font-size: 22px;
+            font-weight: 500;
+            letter-spacing: 1px;
         }
 
-        .diamond-btn.active i {
-            color: var(--gold-accent);
+        .swipe-hint iconify-icon {
+            color: #f2b600;
+            font-size: 30px;
         }
 
-        .diamond-btn.active svg {
-            fill: var(--gold-accent);
+        .price-result-box {
+            max-width: 600px;
+            margin: 26px auto 0 auto;
+            min-height: 120px;
+        }
+
+        .price-img {
+            width: 100%;
+            height: auto;
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+
+        .price-img.active { display: block; }
+
+        .price-placeholder {
+            display: none;
+            padding: 46px 18px;
+            border-radius: 22px;
+            background: #ffffff;
+            color: var(--text-muted);
+            box-shadow: var(--shadow);
+            font-size: 16px;
+        }
+
+        .price-placeholder.active { display: block; }
+
+        @media (max-width: 768px) {
+            .price-slider-area { margin-top: 12px; }
+            .price-track { gap: 34px; }
+            .price-device-btn {
+                flex-basis: 86px;
+                width: 86px;
+                height: 86px;
+                border-width: 5px;
+            }
+            .price-device-btn iconify-icon { font-size: 40px; }
+            .price-device-btn.active iconify-icon { font-size: 44px; }
+            .price-device-btn::after { bottom: -30px; font-size: 12px; }
+            .swipe-hint { font-size: 19px; gap: 10px; }
         }
 
         /* --- 其他樣式 --- */
         .empty-state { text-align: center; padding: 100px 0; color: var(--text-muted); }
 
-        footer { text-align: center; padding: 40px; color: var(--text-gray); font-size: 14px; }
+        footer { text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px; }
     </style>
 </head>
 <body>
@@ -277,38 +354,43 @@
             <div class="page-container">
                 <h2 class="page-header">價格查詢</h2>
                 
-                <div class="diamond-tabs-wrapper">
-                    <div class="diamond-row">
-                        <div class="diamond-btn active" onclick="changePriceImg('applewatch', this)" title="Apple Watch">
-                            <div class="btn-content">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M7,5 L17,5 L16,1 L8,1 Z M7,19 L17,19 L16,23 L8,23 Z M5,5 C5,3.9 5.9,3 7,3 L17,3 C18.1,3 19,3.9 19,5 L19,19 C19,20.1 18.1,21 17,21 L7,21 C5.9,21 5,20.1 5,19 Z M6.5,7 C6.5,6.2 7.2,5.5 8,5.5 L16,5.5 C16.8,5.5 17.5,6.2 17.5,7 L17.5,17 C17.5,17.8 16.8,18.5 16,18.5 L8,18.5 C7.2,18.5 6.5,17.8 6.5,17 Z"/>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="diamond-btn" onclick="changePriceImg('memory', this)" title="容量擴充">
-                            <div class="btn-content"><i class="fa-solid fa-microchip"></i></div>
-                        </div>
-                        <div class="diamond-btn" onclick="changePriceImg('switch', this)" title="Switch遊戲機">
-                            <div class="btn-content"><i class="fa-solid fa-gamepad"></i></div>
+                <div class="price-slider-area" id="priceSliderArea">
+                    <div class="price-viewport" id="priceViewport" aria-label="滑動選擇設備">
+                        <div class="price-track" id="priceTrack">
+                            <button type="button" class="price-device-btn active" data-price="start" data-label="啟動" aria-label="啟動">
+                                <iconify-icon icon="mdi:power"></iconify-icon>
+                            </button>
+                            <button type="button" class="price-device-btn" data-price="applewatch" data-label="Apple Watch" aria-label="Apple Watch">
+                                <iconify-icon icon="mdi:watch-variant"></iconify-icon>
+                            </button>
+                            <button type="button" class="price-device-btn" data-price="memory" data-label="iPhone擴容" aria-label="iPhone擴容">
+                                <iconify-icon icon="mdi:memory"></iconify-icon>
+                            </button>
+                            <button type="button" class="price-device-btn" data-price="switch" data-label="Switch" aria-label="Switch">
+                                <iconify-icon icon="mdi:nintendo-switch"></iconify-icon>
+                            </button>
+                            <button type="button" class="price-device-btn" data-price="vacuum" data-label="Dyson吸塵器" aria-label="Dyson吸塵器">
+                                <iconify-icon icon="mdi:vacuum"></iconify-icon>
+                            </button>
+                            <button type="button" class="price-device-btn" data-price="hairdryer" data-label="Dyson吹風機" aria-label="Dyson吹風機">
+                                <iconify-icon icon="mdi:hair-dryer"></iconify-icon>
+                            </button>
+                            <button type="button" class="price-device-btn" data-price="data" data-label="資料救援" aria-label="資料救援">
+                                <iconify-icon icon="mdi:database-search"></iconify-icon>
+                            </button>
                         </div>
                     </div>
-                    <div class="diamond-row bottom">
-                        <div class="diamond-btn" onclick="changePriceImg('vacuum', this)" title="吸塵器">
-                            <div class="btn-content"><i class="fa-solid fa-wind"></i></div>
-                        </div>
-                        <div class="diamond-btn" onclick="changePriceImg('hdd', this)" title="硬碟">
-                            <div class="btn-content"><i class="fa-solid fa-hdd"></i></div>
-                        </div>
+                    <div class="swipe-hint">
+                        <iconify-icon icon="solar:arrow-left-linear"></iconify-icon>
+                        <span>滑動選擇設備</span>
+                        <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
                     </div>
                 </div>
 
-                <div class="img-box">
-                    <img src="Price_applewatch.PNG" id="img-price-applewatch" class="display-img active">
-                    <img src="Price_memory.PNG" id="img-price-memory" class="display-img">
-                    <img src="" id="img-price-switch" class="display-img">
-                    <img src="" id="img-price-vacuum" class="display-img">
-                    <img src="" id="img-price-hdd" class="display-img">
+                <div class="price-result-box">
+                    <div id="pricePlaceholder" class="price-placeholder active">請左右滑動，將設備圖示移動到中間圓框內查看報價。</div>
+                    <img src="Price_applewatch.PNG" id="img-price-applewatch" class="price-img" alt="Apple Watch 維修報價">
+                    <img src="Price_memory.PNG" id="img-price-memory" class="price-img" alt="iPhone 擴容報價">
                 </div>
             </div>
         </section>
@@ -343,6 +425,9 @@
             sidebar.classList.remove('active');
             overlay.classList.remove('active');
             window.scrollTo(0, 0);
+            if (sectionId === 'prices') {
+                requestAnimationFrame(() => updatePriceSlider(currentPriceIndex));
+            }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -361,13 +446,93 @@
             document.getElementById(`img-process-${type}`).classList.add('active');
         }
 
-        function changePriceImg(type, btn) {
-            document.querySelectorAll('#section-prices .diamond-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('#section-prices .display-img').forEach(i => i.classList.remove('active'));
-            btn.classList.add('active');
-            const target = document.getElementById(`img-price-${type}`);
-            if (target) target.classList.add('active');
+        const priceTrack = document.getElementById('priceTrack');
+        const priceViewport = document.getElementById('priceViewport');
+        const priceButtons = Array.from(document.querySelectorAll('.price-device-btn'));
+        const pricePlaceholder = document.getElementById('pricePlaceholder');
+        let currentPriceIndex = 0;
+        let dragStartX = 0;
+        let dragDeltaX = 0;
+        let isDraggingPrice = false;
+
+        function updatePriceSlider(index) {
+            if (!priceTrack || !priceViewport || priceButtons.length === 0) return;
+
+            currentPriceIndex = Math.max(0, Math.min(index, priceButtons.length - 1));
+
+            priceButtons.forEach((button, buttonIndex) => {
+                button.classList.toggle('active', buttonIndex === currentPriceIndex);
+            });
+
+            const activeButton = priceButtons[currentPriceIndex];
+            const viewportWidth = priceViewport.clientWidth;
+            const activeCenter = activeButton.offsetLeft + (activeButton.offsetWidth / 2);
+            const moveX = (viewportWidth / 2) - activeCenter;
+            priceTrack.style.transform = `translateX(${moveX}px)`;
+
+            updatePriceResult(activeButton.dataset.price);
         }
+
+        function updatePriceResult(type) {
+            document.querySelectorAll('#section-prices .price-img').forEach(img => img.classList.remove('active'));
+            pricePlaceholder.classList.remove('active');
+
+            if (type === 'applewatch') {
+                document.getElementById('img-price-applewatch').classList.add('active');
+            } else if (type === 'memory') {
+                document.getElementById('img-price-memory').classList.add('active');
+            } else {
+                pricePlaceholder.classList.add('active');
+                pricePlaceholder.textContent = type === 'start'
+                    ? '請左右滑動，將設備圖示移動到中間圓框內查看報價。'
+                    : '此項目的報價圖片準備中。';
+            }
+        }
+
+        function movePriceSlider(direction) {
+            updatePriceSlider(currentPriceIndex + direction);
+        }
+
+        function initPriceSlider() {
+            if (!priceTrack || !priceViewport) return;
+
+            priceButtons.forEach((button, index) => {
+                button.addEventListener('click', () => updatePriceSlider(index));
+            });
+
+            priceViewport.addEventListener('pointerdown', (event) => {
+                isDraggingPrice = true;
+                dragStartX = event.clientX;
+                dragDeltaX = 0;
+                priceViewport.classList.add('dragging');
+                priceViewport.setPointerCapture(event.pointerId);
+            });
+
+            priceViewport.addEventListener('pointermove', (event) => {
+                if (!isDraggingPrice) return;
+                dragDeltaX = event.clientX - dragStartX;
+                if (Math.abs(dragDeltaX) > 8) event.preventDefault();
+            });
+
+            priceViewport.addEventListener('pointerup', () => {
+                if (!isDraggingPrice) return;
+                isDraggingPrice = false;
+                priceViewport.classList.remove('dragging');
+
+                if (dragDeltaX < -35) movePriceSlider(1);
+                if (dragDeltaX > 35) movePriceSlider(-1);
+            });
+
+            priceViewport.addEventListener('pointercancel', () => {
+                isDraggingPrice = false;
+                priceViewport.classList.remove('dragging');
+            });
+
+            window.addEventListener('resize', () => updatePriceSlider(currentPriceIndex));
+            requestAnimationFrame(() => updatePriceSlider(0));
+        }
+
+        window.addEventListener('load', initPriceSlider);
     </script>
 </body>
 </html>
