@@ -155,6 +155,20 @@
 
         .price-viewport.dragging { cursor: grabbing; }
 
+        .price-center-frame {
+            position: absolute;
+            left: 50%;
+            top: 29px;
+            width: 118px;
+            height: 118px;
+            border-radius: 50%;
+            border: 7px solid #f7b500;
+            box-shadow: inset 0 0 0 4px #ffffff, 0 12px 28px rgba(0, 0, 0, 0.12);
+            transform: translateX(-50%);
+            pointer-events: none;
+            z-index: 5;
+        }
+
         .price-track {
             display: flex;
             align-items: center;
@@ -207,8 +221,8 @@
         .price-device-btn.active {
             opacity: 1;
             transform: scale(1.08);
-            border-color: #f7b500;
-            box-shadow: inset 0 0 0 4px #ffffff, 0 12px 28px rgba(0, 0, 0, 0.12);
+            border-color: transparent;
+            box-shadow: none;
         }
 
         .price-device-btn.active[data-price="start"] {
@@ -279,6 +293,13 @@
             .price-device-btn iconify-icon { font-size: 40px; }
             .price-device-btn.active iconify-icon { font-size: 44px; }
             .price-device-btn::after { bottom: -30px; font-size: 12px; }
+            .price-center-frame {
+                top: 30px;
+                width: 98px;
+                height: 98px;
+                border-width: 6px;
+                box-shadow: inset 0 0 0 3px #ffffff, 0 10px 22px rgba(0, 0, 0, 0.10);
+            }
         }
 
         /* --- 其他樣式 --- */
@@ -379,6 +400,7 @@
                             </button>
                         </div>
                     </div>
+                    <div class="price-center-frame" aria-hidden="true"></div>
                 </div>
 
                 <div class="price-result-box">
