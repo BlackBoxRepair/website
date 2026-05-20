@@ -138,9 +138,9 @@
         .price-slider-area {
             position: relative;
             width: 100%;
-            max-width: 980px;
-            margin: 22px auto 22px auto;
-            padding: 18px 0 10px 0;
+            max-width: 1080px;
+            margin: 22px auto 16px auto;
+            padding: 18px 0 36px 0;
             overflow: hidden;
             user-select: none;
         }
@@ -148,7 +148,7 @@
         .price-viewport {
             width: 100%;
             overflow: hidden;
-            padding: 18px 0 24px 0;
+            padding: 18px 0 38px 0;
             cursor: grab;
             touch-action: pan-y;
         }
@@ -160,10 +160,13 @@
             align-items: center;
             gap: 54px;
             will-change: transform;
-            transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: translate3d(0, 0, 0);
+            transition: transform 0.72s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .price-viewport.dragging .price-track { transition: none; }
+        .price-viewport.dragging .price-track {
+            transition: none;
+        }
 
         .price-device-btn {
             flex: 0 0 104px;
@@ -171,35 +174,49 @@
             height: 104px;
             border-radius: 50%;
             border: 6px solid transparent;
-            background: rgba(212, 175, 55, 0.24);
+            background: #f7b500;
             color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            opacity: 0.48;
-            transition: var(--transition);
+            opacity: 0.34;
+            transition: opacity 0.42s ease, transform 0.42s ease, border-color 0.42s ease, box-shadow 0.42s ease, background-color 0.42s ease;
             box-shadow: none;
             position: relative;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .price-device-btn[data-price="start"] {
+            background: #aaaaaa;
+            opacity: 0.72;
         }
 
         .price-device-btn iconify-icon {
             font-size: 48px;
             line-height: 1;
             color: currentColor;
+            pointer-events: none;
         }
 
         .price-device-btn:hover {
-            opacity: 0.78;
+            opacity: 0.82;
             transform: translateY(-2px);
         }
 
         .price-device-btn.active {
-            background: #aaaaaa;
-            border-color: #f2b600;
             opacity: 1;
             transform: scale(1.08);
-            box-shadow: inset 0 0 0 4px #ffffff, 0 10px 25px rgba(0, 0, 0, 0.12);
+            border-color: #f7b500;
+            box-shadow: inset 0 0 0 4px #ffffff, 0 12px 28px rgba(0, 0, 0, 0.12);
+        }
+
+        .price-device-btn.active[data-price="start"] {
+            background: #aaaaaa;
+        }
+
+        .price-device-btn.active:not([data-price="start"]) {
+            background: #f7b500;
         }
 
         .price-device-btn.active iconify-icon { font-size: 52px; }
@@ -214,7 +231,7 @@
             color: var(--text-muted);
             white-space: nowrap;
             opacity: 0;
-            transition: var(--transition);
+            transition: opacity 0.36s ease, color 0.36s ease;
         }
 
         .price-device-btn.active::after {
@@ -223,26 +240,9 @@
             font-weight: 500;
         }
 
-        .swipe-hint {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            margin: 8px auto 4px auto;
-            color: var(--primary-black);
-            font-size: 22px;
-            font-weight: 500;
-            letter-spacing: 1px;
-        }
-
-        .swipe-hint iconify-icon {
-            color: #f2b600;
-            font-size: 30px;
-        }
-
         .price-result-box {
             max-width: 600px;
-            margin: 26px auto 0 auto;
+            margin: 20px auto 0 auto;
             min-height: 120px;
         }
 
@@ -268,7 +268,7 @@
         .price-placeholder.active { display: block; }
 
         @media (max-width: 768px) {
-            .price-slider-area { margin-top: 12px; }
+            .price-slider-area { margin-top: 12px; padding-bottom: 28px; }
             .price-track { gap: 34px; }
             .price-device-btn {
                 flex-basis: 86px;
@@ -279,7 +279,6 @@
             .price-device-btn iconify-icon { font-size: 40px; }
             .price-device-btn.active iconify-icon { font-size: 44px; }
             .price-device-btn::after { bottom: -30px; font-size: 12px; }
-            .swipe-hint { font-size: 19px; gap: 10px; }
         }
 
         /* --- 其他樣式 --- */
@@ -357,14 +356,17 @@
                 <div class="price-slider-area" id="priceSliderArea">
                     <div class="price-viewport" id="priceViewport" aria-label="滑動選擇設備">
                         <div class="price-track" id="priceTrack">
-                            <button type="button" class="price-device-btn active" data-price="start" data-label="啟動" aria-label="啟動">
-                                <iconify-icon icon="mdi:power"></iconify-icon>
+                            <button type="button" class="price-device-btn" data-price="data" data-label="資料救援" aria-label="資料救援">
+                                <iconify-icon icon="mdi:database-search"></iconify-icon>
+                            </button>
+                            <button type="button" class="price-device-btn" data-price="memory" data-label="iPhone擴容" aria-label="iPhone擴容">
+                                <iconify-icon icon="mdi:memory"></iconify-icon>
                             </button>
                             <button type="button" class="price-device-btn" data-price="applewatch" data-label="Apple Watch" aria-label="Apple Watch">
                                 <iconify-icon icon="mdi:watch-variant"></iconify-icon>
                             </button>
-                            <button type="button" class="price-device-btn" data-price="memory" data-label="iPhone擴容" aria-label="iPhone擴容">
-                                <iconify-icon icon="mdi:memory"></iconify-icon>
+                            <button type="button" class="price-device-btn active" data-price="start" data-label="啟動" aria-label="啟動">
+                                <iconify-icon icon="mdi:power"></iconify-icon>
                             </button>
                             <button type="button" class="price-device-btn" data-price="switch" data-label="Switch" aria-label="Switch">
                                 <iconify-icon icon="mdi:nintendo-switch"></iconify-icon>
@@ -375,15 +377,7 @@
                             <button type="button" class="price-device-btn" data-price="hairdryer" data-label="Dyson吹風機" aria-label="Dyson吹風機">
                                 <iconify-icon icon="mdi:hair-dryer"></iconify-icon>
                             </button>
-                            <button type="button" class="price-device-btn" data-price="data" data-label="資料救援" aria-label="資料救援">
-                                <iconify-icon icon="mdi:database-search"></iconify-icon>
-                            </button>
                         </div>
-                    </div>
-                    <div class="swipe-hint">
-                        <iconify-icon icon="solar:arrow-left-linear"></iconify-icon>
-                        <span>滑動選擇設備</span>
-                        <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
                     </div>
                 </div>
 
@@ -450,10 +444,30 @@
         const priceViewport = document.getElementById('priceViewport');
         const priceButtons = Array.from(document.querySelectorAll('.price-device-btn'));
         const pricePlaceholder = document.getElementById('pricePlaceholder');
-        let currentPriceIndex = 0;
+        let currentPriceIndex = 3;
+        let currentTranslateX = 0;
         let dragStartX = 0;
         let dragDeltaX = 0;
         let isDraggingPrice = false;
+        let priceMoveFrame = null;
+
+        function getCenteredTranslate(index) {
+            const targetIndex = Math.max(0, Math.min(index, priceButtons.length - 1));
+            const activeButton = priceButtons[targetIndex];
+            const viewportWidth = priceViewport.clientWidth;
+            const activeCenter = activeButton.offsetLeft + (activeButton.offsetWidth / 2);
+            return (viewportWidth / 2) - activeCenter;
+        }
+
+        function setPriceTrackPosition(x) {
+            currentTranslateX = x;
+            priceTrack.style.transform = `translate3d(${x}px, 0, 0)`;
+        }
+
+        function getPriceButtonStep() {
+            if (priceButtons.length < 2) return priceButtons[0]?.offsetWidth || 104;
+            return Math.abs(priceButtons[1].offsetLeft - priceButtons[0].offsetLeft) || 104;
+        }
 
         function updatePriceSlider(index) {
             if (!priceTrack || !priceViewport || priceButtons.length === 0) return;
@@ -464,13 +478,8 @@
                 button.classList.toggle('active', buttonIndex === currentPriceIndex);
             });
 
-            const activeButton = priceButtons[currentPriceIndex];
-            const viewportWidth = priceViewport.clientWidth;
-            const activeCenter = activeButton.offsetLeft + (activeButton.offsetWidth / 2);
-            const moveX = (viewportWidth / 2) - activeCenter;
-            priceTrack.style.transform = `translateX(${moveX}px)`;
-
-            updatePriceResult(activeButton.dataset.price);
+            setPriceTrackPosition(getCenteredTranslate(currentPriceIndex));
+            updatePriceResult(priceButtons[currentPriceIndex].dataset.price);
         }
 
         function updatePriceResult(type) {
@@ -511,7 +520,13 @@
             priceViewport.addEventListener('pointermove', (event) => {
                 if (!isDraggingPrice) return;
                 dragDeltaX = event.clientX - dragStartX;
-                if (Math.abs(dragDeltaX) > 8) event.preventDefault();
+
+                if (Math.abs(dragDeltaX) > 4) event.preventDefault();
+                if (priceMoveFrame) cancelAnimationFrame(priceMoveFrame);
+
+                priceMoveFrame = requestAnimationFrame(() => {
+                    setPriceTrackPosition(getCenteredTranslate(currentPriceIndex) + dragDeltaX);
+                });
             });
 
             priceViewport.addEventListener('pointerup', () => {
@@ -519,17 +534,24 @@
                 isDraggingPrice = false;
                 priceViewport.classList.remove('dragging');
 
-                if (dragDeltaX < -35) movePriceSlider(1);
-                if (dragDeltaX > 35) movePriceSlider(-1);
+                const step = getPriceButtonStep();
+                let targetIndex = currentPriceIndex - Math.round(dragDeltaX / step);
+
+                if (Math.abs(dragDeltaX) > 28 && targetIndex === currentPriceIndex) {
+                    targetIndex += dragDeltaX < 0 ? 1 : -1;
+                }
+
+                updatePriceSlider(targetIndex);
             });
 
             priceViewport.addEventListener('pointercancel', () => {
                 isDraggingPrice = false;
                 priceViewport.classList.remove('dragging');
+                updatePriceSlider(currentPriceIndex);
             });
 
             window.addEventListener('resize', () => updatePriceSlider(currentPriceIndex));
-            requestAnimationFrame(() => updatePriceSlider(0));
+            requestAnimationFrame(() => updatePriceSlider(3));
         }
 
         window.addEventListener('load', initPriceSlider);
