@@ -302,6 +302,199 @@
             }
         }
 
+
+        /* --- 服務站點頁面 --- */
+        .locations-intro {
+            max-width: 720px;
+            margin: 8px auto 24px auto;
+            color: #666666;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .location-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            max-width: 980px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .location-card {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .location-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #f7b500, #d4af37);
+        }
+
+        .location-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 24px 52px rgba(0, 0, 0, 0.09);
+            border-color: rgba(247, 181, 0, 0.35);
+        }
+
+        .location-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 11px;
+            border-radius: 999px;
+            background: #fff7dc;
+            color: #9a7100;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+
+        .location-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-black);
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .location-subtitle {
+            color: #777777;
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+        .location-info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .location-info-item {
+            display: grid;
+            grid-template-columns: 32px 1fr;
+            gap: 10px;
+            align-items: start;
+            color: #444444;
+            font-size: 15px;
+        }
+
+        .location-info-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            color: var(--primary-black);
+            font-size: 14px;
+        }
+
+        .location-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .location-action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 42px;
+            padding: 10px 15px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+        }
+
+        .location-action-btn.primary {
+            background: var(--primary-black);
+            color: #ffffff;
+        }
+
+        .location-action-btn.secondary {
+            background: #ffffff;
+            color: var(--primary-black);
+            border: 1px solid #e8e8e8;
+        }
+
+        .location-action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .location-action-btn.primary:hover {
+            background: #f7b500;
+            color: #ffffff;
+        }
+
+        .location-action-btn.secondary:hover {
+            border-color: #f7b500;
+            color: #9a7100;
+        }
+
+        .location-service-note {
+            max-width: 980px;
+            margin: 18px auto 0 auto;
+            padding: 16px 18px;
+            border-radius: 22px;
+            background: #ffffff;
+            box-shadow: var(--shadow);
+            color: #666666;
+            font-size: 14px;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .location-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .locations-intro {
+                margin-top: 6px;
+                margin-bottom: 20px;
+                padding: 0 4px;
+                font-size: 14px;
+            }
+
+            .location-card {
+                padding: 22px;
+                border-radius: 24px;
+            }
+
+            .location-name {
+                font-size: 21px;
+            }
+
+            .location-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .location-action-btn {
+                width: 100%;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+
         /* --- 其他樣式 --- */
         .empty-state { text-align: center; padding: 100px 0; color: var(--text-muted); }
 
@@ -417,8 +610,76 @@
         </section>
 
         <section id="section-locations" class="content-section">
-            <h2 class="page-header">服務站點</h2>
-            <div class="empty-state">門市據點載入中...</div>
+            <div class="page-container">
+                <h2 class="page-header">服務站點</h2>
+                <p class="locations-intro">黑盒子維修中心目前提供台中市區與海線門市服務，可依照距離、營業時間與交通習慣選擇最方便的服務站點。</p>
+
+                <div class="location-grid">
+                    <article class="location-card">
+                        <div class="location-badge"><i class="fa-solid fa-location-dot"></i> 台中市區</div>
+                        <h3 class="location-name">勤美公益店</h3>
+                        <p class="location-subtitle">近勤美誠品及 NOVA，適合西區、市區客人就近送修。</p>
+
+                        <div class="location-info-list">
+                            <div class="location-info-item">
+                                <span class="location-info-icon"><i class="fa-solid fa-map-location-dot"></i></span>
+                                <span>台中市西區公益路145號</span>
+                            </div>
+                            <div class="location-info-item">
+                                <span class="location-info-icon"><i class="fa-regular fa-clock"></i></span>
+                                <span>每日 11:00 - 20:00</span>
+                            </div>
+                            <div class="location-info-item">
+                                <span class="location-info-icon"><i class="fa-solid fa-phone"></i></span>
+                                <span>04-23015157</span>
+                            </div>
+                        </div>
+
+                        <div class="location-actions">
+                            <a class="location-action-btn primary" href="https://maps.app.goo.gl/tKzhoHtaeiHUD1d76?g_st=ic" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-diamond-turn-right"></i> 開啟導航
+                            </a>
+                            <a class="location-action-btn secondary" href="tel:0423015157">
+                                <i class="fa-solid fa-phone-volume"></i> 撥打電話
+                            </a>
+                        </div>
+                    </article>
+
+                    <article class="location-card">
+                        <div class="location-badge"><i class="fa-solid fa-train-subway"></i> 海線門市</div>
+                        <h3 class="location-name">沙鹿站前店</h3>
+                        <p class="location-subtitle">近沙鹿車站，適合沙鹿、清水、龍井與海線客人就近送修。</p>
+
+                        <div class="location-info-list">
+                            <div class="location-info-item">
+                                <span class="location-info-icon"><i class="fa-solid fa-map-location-dot"></i></span>
+                                <span>台中市沙鹿區沙田路149號</span>
+                            </div>
+                            <div class="location-info-item">
+                                <span class="location-info-icon"><i class="fa-regular fa-clock"></i></span>
+                                <span>每日 12:00 - 21:00</span>
+                            </div>
+                            <div class="location-info-item">
+                                <span class="location-info-icon"><i class="fa-solid fa-phone"></i></span>
+                                <span>04-26633009</span>
+                            </div>
+                        </div>
+
+                        <div class="location-actions">
+                            <a class="location-action-btn primary" href="https://maps.app.goo.gl/rppbPCmLMn7TUNiv7?g_st=ic" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-diamond-turn-right"></i> 開啟導航
+                            </a>
+                            <a class="location-action-btn secondary" href="tel:0426633009">
+                                <i class="fa-solid fa-phone-volume"></i> 撥打電話
+                            </a>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="location-service-note">
+                    建議送修前可先線上預約或來電確認，現場將依設備狀況進行初步檢測與報價。
+                </div>
+            </div>
         </section>
     </main>
 
